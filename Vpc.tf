@@ -6,7 +6,7 @@ resource "aws_vpc" "wp_vpc" {
   
 
   tags = {
-    Name = "wp_vpc-vpc"
+    Name = "wp_vpc"
   }
 }
 
@@ -21,10 +21,19 @@ resource "aws_subnet" "public_subnet" {
     Name = "public_subnet"
   }
 }
+resource "aws_subnet" "public_subnet1" {
+  vpc_id            = aws_vpc.wp_vpc.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "us-west-2b"
+
+  tags = {
+    Name = "public_subnet1"
+  }
+}
 
 resource "aws_subnet" "private_subnet" {
   vpc_id            = aws_vpc.wp_vpc.id
-  cidr_block        = "10.0.2.0/24"
+  cidr_block        = "10.0.3.0/24"
   availability_zone = "us-west-2a"
  
 
@@ -33,4 +42,21 @@ resource "aws_subnet" "private_subnet" {
   }
 }
 
+resource "aws_subnet" "private_subnet2" {
+  vpc_id            = aws_vpc.wp_vpc.id
+  cidr_block        = "10.0.4.0/24"
+  availability_zone = "us-west-2b"
+ 
 
+  tags = {
+    Name = "private_subnet2"
+  }
+}
+resource "aws_db_subnet_group" "db_subnet" {
+    name =      "db_subnet"
+    subnet_ids =  [aws_subnet.private_subnet.id,aws_subnet.private_subnet2.id]
+
+    tags = {
+        Name = "db subnet"
+    }
+}

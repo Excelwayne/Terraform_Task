@@ -26,11 +26,16 @@ resource "aws_route_table" "wpNAT_gateway" {
  
 
   tags = {
-    Name = "wpNat_gateway"
+    Name = "wpNAT_gateway"
   }
 }
+#associate NAT Gateway to private subnets
+resource "aws_route_table_association" "wpNAT_gateway" {
+  subnet_id      = aws_subnet.private_subnet.id
+  route_table_id = aws_route_table.private.id
+}
 
-resource "aws_route_table_association" "private_subnet_association" {
-subnet_id = aws_subnet.private_subnet.id 
-route_table_id = aws_route_table.wpNAT_gateway.id 
+resource "aws_route_table_association" "nat_gateway_2" {
+  subnet_id      = aws_subnet.private_subnet2.id
+  route_table_id =aws_route_table.private.id
 }
